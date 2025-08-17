@@ -1,0 +1,6 @@
+services:
+  swagger:
+    build:
+      context: .
+    ports:
+      - "8081:8080"
