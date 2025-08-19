@@ -46,7 +46,14 @@ function App() {
             </Card>
           }
         />
-        {/* <Route path="*" element={layout(<NotFoundPage />)} /> */}
+        <Route
+          path="*"
+          element={
+            <Card>
+              <NotFoundPage />
+            </Card>
+          }
+        />
       </Routes>
     </BrowserRouter>
   );

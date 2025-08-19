@@ -1,5 +1,6 @@
 import { useState } from "react";
 
+// TokenModal component
 const TokenModal = ({ closeModal }) => {
   const [inputValue, setInputValue] = useState("");
   const onSubmit = (e) => {

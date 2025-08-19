@@ -1,3 +1,4 @@
+// NotFoundPage component
 const NotFoundPage = () => {
   return (
     <>

@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import axios from "axios";
 
 /**
@@ -45,7 +45,6 @@ const MindReader = () => {
 
       setRecognized(result.data.objects);
       setMessage(`Recognized ${result.data.objects.length} objects`);
-      console.log(result.data.objects);
     } catch (e) {
       setMessage(`Error recognizing objects: ${e.message}`);
       setRecognized([]);
@@ -54,7 +53,7 @@ const MindReader = () => {
     }
   };
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (!imagePreview || recognized.length === 0) return;
 
     const canvas = canvasRef.current;

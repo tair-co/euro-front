@@ -1,6 +1,9 @@
 import { useState } from "react";
 import { apiGet, apiPost } from "../utils/ApiRequest";
 
+/**
+ * DreamWeaver component for generating images from text prompts.
+ */
 const DreamWeaver = () => {
   const [prompt, setPrompt] = useState("");
   const [loading, setLoading] = useState(false);

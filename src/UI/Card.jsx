@@ -1,3 +1,4 @@
+// Card component
 const Card = ({ children }) => {
   return <div className="card-ui">{children}</div>;
 };

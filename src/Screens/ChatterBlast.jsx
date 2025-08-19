@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { apiGet, apiPost } from "../utils/ApiRequest";
 import TokenModal from "../components/TokenModal";
 
+// Typewriter function effect
 const typeWriterEffect = async (fullText, setText, startIndex, onFinish) => {
   for (let i = startIndex; i < fullText.length; i++) {
     await new Promise((r) => setTimeout(r, Math.floor(Math.random() * 19) + 2));
@@ -11,6 +12,7 @@ const typeWriterEffect = async (fullText, setText, startIndex, onFinish) => {
   onFinish(fullText.length);
 };
 
+// ChatterBlast component
 const ChatterBlast = () => {
   const [message, setMessage] = useState("");
   const [responseText, setResponseText] = useState("");
