@@ -1,6 +1,10 @@
 import React, { useRef, useState } from "react";
-import { apiPost } from "../utils/ApiRequest";
+import axios from "axios";
 
+/**
+ * MindReader component for recognizing objects in images.
+ * @returns
+ */
 const MindReader = () => {
   const [imagePreview, setImagePreview] = useState(null);
   const [loading, setLoading] = useState(false);
@@ -25,25 +29,31 @@ const MindReader = () => {
     setRecognized([]);
 
     const formData = new FormData();
-    formData.append("file", file);
+    formData.append("image", file);
 
     try {
-      // Example: {objects: [{x,y,width,height,label}, ...]}
-      const result = await apiPost("/mindreader/recognize", formData, {
-        headers: { "Content-Type": "multipart/form-data" },
-      });
+      const result = await axios.post(
+        "http://localhost:3000/api/imagerecognition/recognize",
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+            "X-API-TOKEN": localStorage.getItem("token") || "",
+          },
+        }
+      );
 
-      setRecognized(result.objects);
-      setMessage(`Recognized ${result.objects.length} objects`);
+      setRecognized(result.data.objects);
+      setMessage(`Recognized ${result.data.objects.length} objects`);
+      console.log(result.data.objects);
     } catch (e) {
-      setMessage("Error recognizing objects.");
+      setMessage(`Error recognizing objects: ${e.message}`);
       setRecognized([]);
     } finally {
       setLoading(false);
     }
   };
 
-  // draw rectangles when recognized objects change
   React.useEffect(() => {
     if (!imagePreview || recognized.length === 0) return;
 
@@ -62,14 +72,23 @@ const MindReader = () => {
       ctx.fillStyle = "red";
 
       recognized.forEach((obj) => {
-        ctx.strokeRect(obj.x, obj.y, obj.width, obj.height);
-        ctx.fillText(obj.label, obj.x + 4, obj.y + 18);
+        ctx.strokeRect(
+          obj.bounding_box.x,
+          obj.bounding_box.y,
+          obj.bounding_box.width,
+          obj.bounding_box.height
+        );
+        ctx.fillText(
+          obj.label,
+          obj.bounding_box.x + 10,
+          obj.bounding_box.y + 28
+        );
       });
     };
   }, [recognized, imagePreview]);
 
   return (
-    <div>
+    <>
       <h1>MindReader</h1>
 
       <input
@@ -91,7 +110,7 @@ const MindReader = () => {
 
       {loading && <p>Loading...</p>}
 
-      {message && <p>{message}</p>}
+      {message && <p className=" text-danger">{message}</p>}
 
       {imagePreview && (
         <canvas
@@ -99,7 +118,7 @@ const MindReader = () => {
           style={{ maxWidth: "100%", border: "1px solid #ddd" }}
         />
       )}
-    </div>
+    </>
   );
 };
 

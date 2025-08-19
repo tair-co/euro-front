@@ -9,21 +9,44 @@ import MindReader from "./Screens/MindReader";
 import Card from "./UI/Card";
 import NotFoundPage from "./Error/NotFoundPage";
 
-// layout default
-const layout = (component) => {
-  return <Card>{component}</Card>;
-};
-
 // main component
 function App() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/home" element={layout(<Home />)} />
-        <Route path="/chatter" element={layout(<ChatterBlast />)} />
-        <Route path="/generator" element={layout(<DreamWeaver />)} />
-        <Route path="/recognizer" element={layout(<MindReader />)} />
-        <Route path="*" element={layout(<NotFoundPage />)} />
+        <Route
+          path="/home"
+          element={
+            <Card>
+              <Home />
+            </Card>
+          }
+        />
+        <Route
+          path="/chatter"
+          element={
+            <Card>
+              <ChatterBlast />
+            </Card>
+          }
+        />
+        <Route
+          path="/generator"
+          element={
+            <Card>
+              <DreamWeaver />
+            </Card>
+          }
+        />
+        <Route
+          path="/recognizer"
+          element={
+            <Card>
+              <MindReader />
+            </Card>
+          }
+        />
+        {/* <Route path="*" element={layout(<NotFoundPage />)} /> */}
       </Routes>
     </BrowserRouter>
   );

@@ -8,7 +8,7 @@ const DreamWeaver = () => {
   const [resourceId, setResourceId] = useState(null);
   const [progress, setProgress] = useState(0);
 
-  const pollJob = async (jobId) => {
+  const pollJob = async (jobId, extra = false) => {
     return new Promise((resolve, reject) => {
       const interval = setInterval(async () => {
         try {
@@ -19,7 +19,11 @@ const DreamWeaver = () => {
             clearInterval(interval);
 
             const result = await apiGet(`/imagegeneration/result/${jobId}`);
-            setImageUrl(result.image_url);
+            if (extra) {
+              console.log("w");
+              const img = await apiGet(`/imagegeneration/status/${jobId}`);
+              setImageUrl(img.image_url);
+            }
             setResourceId(result.resource_id);
             setLoading(false);
             resolve();
@@ -58,13 +62,23 @@ const DreamWeaver = () => {
     try {
       const res = await apiPost(endpoint, { resource_id: resourceId });
       const jobId = res.job_id;
-      await pollJob(jobId);
+      await pollJob(jobId, true);
     } catch (e) {
       console.error("Action failed:", e);
       setLoading(false);
     }
   };
 
+  const saveImageHandler = () => {
+    if (!imageUrl) return;
+
+    const link = document.createElement("a");
+    link.href = imageUrl;
+    link.download = "generated_image.png"; //  <-- без () !
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
   return (
     <div className="d-flex flex-column" style={{ gap: 8 }}>
       <h2>Generate Image</h2>
@@ -97,7 +111,9 @@ const DreamWeaver = () => {
           />
 
           <div className="mt-2 d-flex flex-wrap" style={{ gap: 6 }}>
-            <button className="btn btn-success">Save</button>
+            <button className="btn btn-success" onClick={saveImageHandler}>
+              Save
+            </button>
             <button
               className="btn btn-dark"
               onClick={() => handleAction("/imagegeneration/upscale")}
